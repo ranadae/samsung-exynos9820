@@ -22,13 +22,24 @@ then
 else
     dash='-'
     if [ "x$1" = "x" ]; then
-        nver="$(curl -s https://github.com/topjohnwu/Magisk/releases | grep -m 1 -Poe 'Magisk v[\d\.]+' | sed -r 's/Magisk v([\d\.]+)/\1/')"
+        # Attempt to get the latest stable release version from GitHub API
+        nver="$(curl -s https://api.github.com/repos/topjohnwu/Magisk/releases/latest | grep -Po '"tag_name": "\K[^"]+' || echo "none")"
+        if [ "$nver" = "none" ]; then
+            echo "Failed to automatically determine the latest Magisk version. Please specify it as an argument (e.g., ./update_magisk.sh v29.0)"
+            exit 1
+        fi
     else
         nver="$1"
     fi
 
+    # The dash logic for v26.3 might be outdated for newer versions.
+    # For v29.0, the format is typically Magisk-v29.0.apk, so '-' is correct.
+    # We can simplify this if we assume newer versions consistently use '-'.
+    # For now, keep it as is, as it doesn't seem to be the root cause of the current error.
     if [ "$nver" = "v26.3" ]; then
         dash='.'
+    else
+        dash='-' # Ensure dash is '-' for other versions if not v26.3
     fi
 
     magisk_link="https://github.com/topjohnwu/Magisk/releases/download/${nver}/Magisk${dash}${nver}.apk"
@@ -40,7 +51,7 @@ if [ "$ver" = "$nver" ]; then
 fi
 
 if [ "$nver" = "none" ]; then
-    echo "Cannot determine Magisk version. Please specify it as an argument (e.g., ./update_magisk.sh v26.3)"
+    echo "Cannot determine Magisk version. Please specify it as an argument (e.g., ./update_magisk.sh v29.0)"
     exit 1
 fi
 
