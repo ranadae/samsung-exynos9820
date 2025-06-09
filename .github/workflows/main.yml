@@ -55,7 +55,7 @@ jobs:
           set -e -o pipefail
           ./cruelbuild config                    \
                        model=${{ matrix.model }} \
-                       name="Magisk v29 Here"        \
+                       name="Magisk v29 Here R-sh"        \
                        toolchain=$TOOLCHAIN      \
                        +magisk=v29.0             \
                        +nohardening              \
