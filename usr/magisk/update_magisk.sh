@@ -7,7 +7,9 @@ ver="$(cat $DIR/magisk_version 2>/dev/null || echo -n 'none')"
 
 # This script is designed to update Magisk within a custom kernel build.
 # It supports Magisk v26.x and is also compatible with Magisk v29.0 as the core
-# extraction paths for magiskboot and magisk.zip remain consistent.
+# extraction paths for magiskboot remain consistent. However, for Magisk v29.0,
+# the magisk.apk itself acts as the flashable zip, and magisk.zip is no longer
+# bundled inside the apk in the 'assets/' directory.
 # Magisk v29.0 introduces XZ compression for module zip files, which is handled
 # by Magisk itself and does not require changes in this extraction script.
 
@@ -35,7 +37,6 @@ else
     # The dash logic for v26.3 might be outdated for newer versions.
     # For v29.0, the format is typically Magisk-v29.0.apk, so '-' is correct.
     # We can simplify this if we assume newer versions consistently use '-'.
-    # For now, keep it as is, as it doesn't seem to be the root cause of the current error.
     if [ "$nver" = "v26.3" ]; then
         dash='.'
     else
@@ -74,12 +75,11 @@ if [ ! -f "$DIR/magiskboot" ]; then
     chmod +x "$DIR/magiskboot"
 fi
 
-# Extract magisk.apk to magisk.zip
+# For Magisk v29.0, the magisk.apk itself is the flashable zip.
+# We just need to rename it to magisk.zip.
 if [ ! -f "$DIR/magisk.zip" ]; then
-    echo "Extracting magisk.zip..."
-    unzip -o "$DIR/magisk.apk" assets/magisk.zip -d "$DIR"
-    mv "$DIR/assets/magisk.zip" "$DIR/magisk.zip"
-    rm -rf "$DIR/assets"
+    echo "Renaming magisk.apk to magisk.zip..."
+    mv "$DIR/magisk.apk" "$DIR/magisk.zip"
 fi
 
 # Update magisk_version file
