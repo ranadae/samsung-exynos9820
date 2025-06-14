@@ -75,6 +75,15 @@ if [ ! -f "$DIR/magiskboot" ]; then
     chmod +x "$DIR/magiskboot"
 fi
 
+# Extract magiskinit
+if [ ! -f "$DIR/magiskinit" ]; then
+    echo "Extracting magiskinit..."
+    unzip -o "$DIR/magisk.apk" lib/arm64-v8a/libmagiskinit.so -d "$DIR"
+    mv "$DIR/lib/arm64-v8a/libmagiskinit.so" "$DIR/magiskinit"
+    rm -rf "$DIR/lib"
+    chmod +x "$DIR/magiskinit"
+fi
+
 # For Magisk v29.0, the magisk.apk itself is the flashable zip.
 # We just need to rename it to magisk.zip.
 if [ ! -f "$DIR/magisk.zip" ]; then
@@ -86,5 +95,3 @@ fi
 echo "$nver" > "$DIR/magisk_version"
 
 echo "Magisk updated to $nver."
-
-
