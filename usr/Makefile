@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0
 #
 # kbuild file for usr/ - including initramfs image
-#
 
 klibcdirs:;
 PHONY += klibcdirs
