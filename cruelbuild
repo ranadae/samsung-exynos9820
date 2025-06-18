@@ -494,9 +494,6 @@ def parse_args():
             elif key == 'toolchain':
                 if value not in toolchain:
                     fatal('Unknown toolchain: ' + value)
-            elif key == 'magisk':
-                if value not in ['y', 'n']:
-                    fatal('Invalid magisk value. Use y or n.')
 
         else:
             switch_config(arg, True, configs)
